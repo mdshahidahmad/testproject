@@ -1,0 +1,31 @@
+trigger:
+- master
+
+pool
+  vmImage:  'macOS-latest'
+
+
+steps:
+
+- task: UsePythonVersion@0
+  inputes:
+    versionSpec: '3.x'
+    addToPath:  true
+
+
+- script:
+  python -m pip install --upgrade pip
+  pip install selenium
+  pip install pytest
+
+
+  displayName: 'install python pkg from requirements'
+
+- script: pytest tests --doctest-modules --junitxml=junit/test-results.xml
+  displayName: 'Execute tests'
+
+Settings
+- task: PublishTestResults@2
+  inputes:
+    testResultsFormat: 'JUnit'
+    testResultsFile: '**/*.xml'
